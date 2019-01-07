@@ -1,0 +1,29 @@
+import "remix_tests.sol"; // this import is automatically injected by Remix.
+import "./PyramidScam.sol";
+
+contract PyramidScamTest {
+   
+    PyramidMember PyramidMemberToTest;
+    PyramidScam   PyramidScamToTest;
+    function beforeAll () public{
+       uint joiningFee = 1500;
+       uint memberTokens = 1000;
+       uint PyramidScamjoiningFee;
+       uint PyramidScamtokenAmount;
+       //Check PuramidSkam variables
+       PyramidScamToTest      = new PyramidScam(joiningFee);
+       PyramidScamjoiningFee  = PyramidScamToTest.joiningFee();
+       PyramidScamtokenAmount = PyramidScamToTest.owner().getTokenAmount();
+       Assert.equal(PyramidScamtokenAmount, memberTokens, "Wrong token Amount");
+       Assert.equal(PyramidScamjoiningFee, joiningFee, "Wrong joining fee");
+    }
+    
+    //function JoinScam () public {
+      //  PyramidMemberToTest = new PyramidScamToTest.owner.join();
+        //Assert.equal(PyramidScamToTest.winningProposal(), uint(1), "1 should be the winning proposal");
+    //}
+    
+    //function checkWinninProposalWithReturnValue () public view returns (bool) {
+        //return PyramidScamToTest.winningProposal() == 1;
+    //}
+}
