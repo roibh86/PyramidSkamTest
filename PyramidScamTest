@@ -1,13 +1,16 @@
 import "remix_tests.sol"; // this import is automatically injected by Remix.
 import "./PyramidScam.sol";
+pragma solidity >=0.5.0 <0.6.0;
 
 contract PyramidScamTest {
    
     PyramidMember PyramidMemberToTest;
     PyramidScam   PyramidScamToTest;
+    uint ntokens;
+    uint nChildren;
+    uint joiningFee = 1500;
+    uint memberTokens = 1000;
     function beforeAll () public{
-       uint joiningFee = 1500;
-       uint memberTokens = 1000;
        uint PyramidScamjoiningFee;
        uint PyramidScamtokenAmount;
        //Check PuramidSkam variables
@@ -18,12 +21,23 @@ contract PyramidScamTest {
        Assert.equal(PyramidScamjoiningFee, joiningFee, "Wrong joining fee");
     }
     
-    //function JoinScam () public {
-      //  PyramidMemberToTest = new PyramidScamToTest.owner.join();
-        //Assert.equal(PyramidScamToTest.winningProposal(), uint(1), "1 should be the winning proposal");
-    //}
+    function JoinScam () public {
+        bool foundChild = false;
+        PyramidMemberToTest = PyramidScamToTest.owner().join.value(2000)();
+        nChildren++;
+        ntokens+=memberTokens;
+        Assert.equal(address(PyramidScamToTest.owner()), PyramidMemberToTest.owner(), "Wrong owner adress");
+        Assert.equal(address(PyramidScamToTest), address(PyramidMemberToTest.parentScam()), "Wrong Parent Scam");
+        Assert.equal(address(PyramidScamToTest.owner()), address(PyramidMemberToTest.recruiter()), "Wrong recruiter");
+        for (uint i = 0; i <nChildren ; i++) {
+            if (address(PyramidMemberToTest) == address(PyramidScamToTest.owner().children))
+                foundChild = true;
+        }
+        Assert.equal(foundChild, true, "Wrong recruiter");
+    }
     
     //function checkWinninProposalWithReturnValue () public view returns (bool) {
         //return PyramidScamToTest.winningProposal() == 1;
     //}
 }
+
