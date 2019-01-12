@@ -14,6 +14,8 @@ contract PyramidScamTest {
     uint public tokenSellPrice  = 1000;
     uint public numTokensToGive = 100;
     uint public requestedPrice  = 200;
+    uint public numTokensToSell = 100;
+    uint public SellrequestedPrice  = 200;
     function beforeAll () public{
        uint PyramidScamjoiningFee;
        uint PyramidScamtokenAmount;
@@ -56,6 +58,17 @@ contract PyramidScamTest {
         Assert.equal(PyramidScamToTest.owner().nTokens(), updatedNtokens, "nTokens was not updated");
         Assert.equal(address(this).balance, UpdatedthisBalance, "Balance was not upated after buying at seller");
         Assert.equal(address(PyramidScamToTest.owner()).balance, updatedMemberBalance, "Balance was not upated after buying at contract");
+       
+    }
+
+    function sell() public {
+        uint UpdatedthisBalance   = address(this).balance - SellrequestedPrice * numTokensToSell;
+        uint updatedMemberBalance = address(PyramidScamToTest.owner()).balance + requestedPrice * numTokensToSell;
+        uint updatedNtokens =  PyramidScamToTest.owner().nTokens() - numTokensToSell;
+        PyramidScamToTest.owner().buy(numTokensToSell, SellrequestedPrice);
+        Assert.equal(PyramidScamToTest.owner().nTokens(), updatedNtokens, "nTokens was not updated");
+        Assert.equal(address(this).balance, UpdatedthisBalance, "Balance was not upated after selling at buyerr");
+        Assert.equal(address(PyramidScamToTest.owner()).balance, updatedMemberBalance, "Balance was not upated after selling at contract");
        
     }
 }
