@@ -2,8 +2,22 @@ pragma solidity >=0.5.0 <0.6.0;
 import "remix_tests.sol"; // this import is automatically injected by Remix.
 import "./PyramidScam.sol";
 
+contract Tester {
+    PyramidMember public a;
+    constructor(PyramidMember _a) public{
+      a = _a;
+    }
+  
+    function join() public payable returns (PyramidMember){
+        return a.join.value(500)();
+    }
+}
+
+
+
 contract PyramidScamTest {
    
+    Tester public tester;
     PyramidMember PyramidMemberToTest;
     PyramidScam   PyramidScamToTest;
     uint public ntokens;
@@ -19,7 +33,7 @@ contract PyramidScamTest {
     function beforeAll () public{
        uint PyramidScamjoiningFee;
        uint PyramidScamtokenAmount;
-       //Check PuramidSkam variables
+       //Check PuramidScam variables
        PyramidScamToTest      = new PyramidScam(joiningFee);
        PyramidScamjoiningFee  = PyramidScamToTest.joiningFee();
        PyramidScamtokenAmount = PyramidScamToTest.owner().getTokenAmount(); 
@@ -27,12 +41,13 @@ contract PyramidScamTest {
        //Assert.equal(PyramidScamjoiningFee, joiningFee, "Wrong joining fee");
       // require(PyramidScamtokenAmount == memberTokens, "Wrong token Amount"); //TODO - bug?
        require(PyramidScamjoiningFee == joiningFee, "Wrong joining fee");
-        
+       tester = new Tester(PyramidScamToTest.owner());
     }
     
     function JoinScam () public payable{
         bool foundChild = false;
-        PyramidMemberToTest = PyramidScamToTest.owner().join.value(500)();
+        //PyramidMemberToTest = PyramidScamToTest.owner().join.value(500)();
+        PyramidMemberToTest = tester.join();
         nChildren++;
         ntokens+=memberTokens;
         //Assert.equal(address(PyramidScamToTest.owner()), PyramidMemberToTest.owner(), "Wrong owner adress");
